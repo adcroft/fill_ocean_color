@@ -11,5 +11,5 @@ install:
   - pip list
 
 script:
-  - make
+  - make TOPO=seawifs_ocn_mask.nc
   - md5sum *.nc
