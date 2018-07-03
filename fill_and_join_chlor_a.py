@@ -34,6 +34,8 @@ def parseCommandLine():
       help="""Variable for chlorophyll in sequential files.""")
   parser.add_argument('-p','--progress', action='store_true',
       help="""Show progress.""")
+  parser.add_argument('-sm','--save_mask', type=str, #default='',
+      help="""File to optionally save the bathymetry derived mask.""")
   parser.add_argument('-q','--quiet', action='store_true',
       help="""Disable informational messages.""")
 
@@ -95,6 +97,21 @@ def main(args):
   if numpy.max( numpy.abs( ocn_lon - chl_lon ) ) > 1.e-4: raise Exception('Inconsistent longitudes!')
   if numpy.max( numpy.abs( ocn_lat - chl_lat ) ) > 1.e-4: raise Exception('Inconsistent latitudes!')
   if args.progress: end_info(tic)
+
+  # Optionally save mask as a depth
+  if args.save_mask is not None:
+    if args.progress: tic = info('Saving computed ocean mask')
+    new_file = netCDF4.Dataset(args.save_mask, 'w', 'clobber', format="NETCDF3_64BIT_OFFSET")
+    new_file.createDimension('lat',ocn_mask.shape[0])
+    new_file.createDimension('lon',ocn_mask.shape[1])
+    new_file.createVariable('lat', ocn_mask.dtype, ('lat',) )
+    new_file.createVariable('lon', ocn_mask.dtype, ('lon',) )
+    new_file.createVariable('depth', ocn_mask.dtype, ('lat','lon',) )
+    new_file.variables['lat'][:] = ocn_lat[:]
+    new_file.variables['lon'][:] = ocn_lon[:]
+    new_file.variables['depth'][:] = -ocn_mask[:]
+    new_file.close()
+    if args.progress: end_info(tic)
 
   if not args.quiet: print('# of wet points = %i.'%(ocn_mask.sum()))
 
