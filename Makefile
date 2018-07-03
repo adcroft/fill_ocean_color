@@ -23,7 +23,7 @@ Check: check
 
 # Fetch data from web
 S%.nc:
-	echo wget https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/$@
+	wget https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/$@
 
 # Fetch topography file from archive (not easily available on web)
 $(TOPO):
