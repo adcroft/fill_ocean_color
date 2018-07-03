@@ -12,3 +12,4 @@ install:
 
 script:
   - make
+  - md5sum *.nc
