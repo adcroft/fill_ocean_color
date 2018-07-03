@@ -35,7 +35,7 @@ $(TARG): $(TOPO) $(FILES)
 	./fill_and_join_chlor_a.py $@ $(TOPO) $(FILES)
 
 # Record checksums
-$(HASH): $(TARG)
+$(HASH): | $(TARG)
 	md5sum $(TARG) > $@
 raw.md5: $(FILES)
 	md5sum $(FILES) > $@
