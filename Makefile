@@ -26,9 +26,13 @@ S%.nc:
 	wget https://oceandata.sci.gsfc.nasa.gov/cgi/getfile/$@
 
 # Fetch topography file from archive (not easily available on web)
-$(TOPO):
+GEBCO_08_v1.nc:
 	cp /archive/gold/datasets/topography/$@ .
 	md5sum -c gebco.md5
+seawifs_ocn_mask.nc:
+	wget -nv -O $@.gz ftp://ftp.gfdl.noaa.gov/pub/aja/seawifs_ocn_mask.nc.gz
+	gunzip $@.gz
+	md5sum -c seawifs_ocn_mask.nc.md5
 
 # Fill and join data
 $(TARG): $(TOPO) $(FILES)
