@@ -1,15 +1,7 @@
-FILES = S19980012010031.L3m_MC_CHL_chlor_a_9km.nc \
-        S19980322010059.L3m_MC_CHL_chlor_a_9km.nc \
-        S19980602010090.L3m_MC_CHL_chlor_a_9km.nc \
-        S19980912010120.L3m_MC_CHL_chlor_a_9km.nc \
-        S19981212010151.L3m_MC_CHL_chlor_a_9km.nc \
-        S19981522010181.L3m_MC_CHL_chlor_a_9km.nc \
-        S19981822010212.L3m_MC_CHL_chlor_a_9km.nc \
-        S19982132010243.L3m_MC_CHL_chlor_a_9km.nc \
-        S19972442010273.L3m_MC_CHL_chlor_a_9km.nc \
-        S19972742010304.L3m_MC_CHL_chlor_a_9km.nc \
-        S19973052010334.L3m_MC_CHL_chlor_a_9km.nc \
-        S19973352010365.L3m_MC_CHL_chlor_a_9km.nc
+DATES = S19980012010031 S19980322010059 S19980602010090 S19980912010120 \
+        S19981212010151 S19981522010181 S19981822010212 S19982132010243 \
+        S19972442010273 S19972742010304 S19973052010334 S19973352010365
+FILES = $(foreach d,$(DATES),$(d).L3m_MC_CHL_chlor_a_9km.nc)
 TOPO = GEBCO_08_v1.nc
 TARG = seawifs-clim-1997-2010.nc
 HASH = hash.md5
@@ -37,6 +29,13 @@ seawifs_ocn_mask.nc:
 # Fill and join data
 $(TARG): $(TOPO) $(FILES)
 	./fill_and_join_chlor_a.py $@ $(TOPO) $(FILES)
+
+stage.%.nc: %.L3m_MC_CHL_chlor_a_9km.nc
+	./fill_and_join_chlor_a.py $@ $(TOPO) $^
+stages: $(foreach d,$(DATES),stage.$(d).nc)
+	ncrcat -h $^ test.nc
+test: stage.S19980012010031.nc
+	md5sum $^
 
 # Record checksums
 $(HASH): | $(TARG)

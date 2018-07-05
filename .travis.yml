@@ -1,7 +1,7 @@
 language: python
 
 python:
-  - "3.5"
+  - "3.6"
 
 install:
   - pip install --upgrade pip
@@ -11,5 +11,5 @@ install:
 script:
   - make raw.md5
   - make seawifs_ocn_mask.nc
-  - travis_wait 60 make TOPO=seawifs_ocn_mask.nc
+  - make TOPO=seawifs_ocn_mask.nc test
   - md5sum *.nc
