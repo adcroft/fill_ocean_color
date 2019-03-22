@@ -22,8 +22,7 @@ GEBCO_08_v1.nc:
 	cp /archive/gold/datasets/topography/$@ .
 	md5sum -c gebco.md5
 seawifs_ocn_mask.nc:
-	wget -nv -O $@.gz ftp://ftp.gfdl.noaa.gov/pub/aja/seawifs_ocn_mask.nc.gz
-	gunzip $@.gz
+	wget -nv ftp://ftp2.gfdl.noaa.gov/perm/Alistair.Adcroft/datasets/seawifs_ocn_mask.nc
 	md5sum -c seawifs_ocn_mask.nc.md5
 
 # Fill and join data
